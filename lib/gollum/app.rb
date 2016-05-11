@@ -522,7 +522,11 @@ module Precious
       name = extract_name(fullpath) || wiki.index_page
       path = extract_path(fullpath) || '/'
 
-      if page = wiki.paged(name, path, exact = true)
+      parsed = Gollum::Page.parse_filename(name)
+
+      if parsed != [] && wiki.paged(parsed[0], path, exact = true)
+        redirect to([path, parsed[0]].compact.join('/'))
+      elsif page = wiki.paged(name, path, exact = true)
         @page          = page
         @name          = name
         @content       = page.formatted_data
