@@ -11,6 +11,8 @@ require 'gollum/views/layout'
 require 'gollum/views/editable'
 require 'gollum/views/has_page'
 
+require 'open-uri'
+
 require File.expand_path '../helpers', __FILE__
 
 #required to upload bigger binary files
@@ -108,6 +110,12 @@ module Precious
 
     get '/' do
       redirect clean_url(::File.join(@base_url, @page_dir, wiki_new.index_page))
+    end
+
+    get '/umlrender/:uml' do
+      uml = URI.parse("#{ENV['PLANTUML_URL']}/#{params[:uml]}").read
+      content_type uml.content_type
+      uml
     end
 
     # path is set to name if path is nil.
